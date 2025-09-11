@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import axios from "../api.js";
+import axios from "axios"; // directly use axios
 
 export default function Dashboard() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get("/products").then(res => setProducts(res.data));
+    axios
+      .get("http://localhost:5000/products") // ✅ full URL to backend
+      .then(res => setProducts(res.data))
+      .catch(err => console.error("Error fetching products:", err));
   }, []);
 
   const lowStock = products.filter(p => p.stock <= 5);

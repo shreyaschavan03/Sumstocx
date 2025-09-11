@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "../api.js"; // your axios instance
 
 export default function Settings() {
@@ -7,23 +7,7 @@ export default function Settings() {
   const [theme, setTheme] = useState("light");
   const [loading, setLoading] = useState(false);
 
-  // Load existing settings (optional)
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const res = await axios.get("/user/settings");
-        setUsername(res.data.username || "");
-        setEmail(res.data.email || "");
-        setTheme(res.data.theme || "light");
-        applyTheme(res.data.theme || "light");
-      } catch (err) {
-        console.error("Failed to load settings", err);
-      }
-    };
-    fetchSettings();
-  }, []);
-
-  // Apply theme
+  // Apply theme immediately
   const applyTheme = (theme) => {
     document.documentElement.classList.toggle("dark", theme === "dark");
   };
@@ -36,10 +20,11 @@ export default function Settings() {
         email,
         theme,
       });
+
       applyTheme(theme);
-      alert(res.data.message);
+      alert(res.data.message || "Settings saved successfully");
     } catch (err) {
-      console.error(err);
+      console.error("Failed to save settings:", err);
       alert(err.response?.data?.message || "Failed to save settings");
     } finally {
       setLoading(false);
@@ -51,7 +36,10 @@ export default function Settings() {
       <h2 className="text-3xl font-bold text-blue-700">Settings</h2>
 
       <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg animate-fadeIn space-y-4">
-        <p className="font-semibold text-gray-800 dark:text-gray-200">Profile Settings</p>
+        <p className="font-semibold text-gray-800 dark:text-gray-200">
+          Profile Settings
+        </p>
+
         <input
           type="text"
           placeholder="Username"
@@ -59,6 +47,7 @@ export default function Settings() {
           onChange={(e) => setUsername(e.target.value)}
           className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:text-gray-200"
         />
+
         <input
           type="email"
           placeholder="Email"
