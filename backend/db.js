@@ -1,11 +1,18 @@
 import pkg from "pg";
 const { Pool } = pkg;
 
-export const pool = new Pool({
+export const localPool = new Pool({
   user: "postgres",
   host: "localhost",
   database: "inventorydb",
-  password: "Secure@123",  // change this
+  password: "Secure@123",
   port: 5432,
 });
-export default pool;  // ✅ THIS is the important part
+
+export const supabasePool = new Pool({
+  connectionString:
+    "postgresql://postgres:Secure@123@db.gpfesrlqguapdnvgpjrv.supabase.co:5432/postgres",
+  ssl: { rejectUnauthorized: false },
+});
+
+export default { localPool, supabasePool };
