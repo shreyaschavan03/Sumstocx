@@ -28,8 +28,29 @@ app.put("/products/:id", async (req, res) => {
   }
 });
 
+// ➕ Add a new product
+app.post("/products", async (req, res) => {
+  const { name, barcode, price, stock } = req.body;
 
-// Example: Save user settings
+  try {
+    const result = await pool.query(
+      `INSERT INTO products (name, barcode, price, stock)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [name, barcode, price, stock]
+    );
+
+    res.status(201).json({
+      message: "Product added successfully",
+      product: result.rows[0],
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to add product" });
+  }
+});
+
+// Save user settings
 app.post("/user/settings", async (req, res) => {
   try {
     const { username, email, theme } = req.body;
@@ -50,7 +71,7 @@ app.post("/user/settings", async (req, res) => {
   }
 });
 
-// Example: Get all products
+// Get all products
 app.get("/products", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM products");
