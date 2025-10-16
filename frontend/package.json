@@ -8,8 +8,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.75.0",
     "@zxing/browser": "^0.1.5",
     "axios": "^1.6.0",
+    "lucide-react": "^0.545.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-qr-barcode-scanner": "^2.1.9",
